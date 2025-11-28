@@ -28,7 +28,7 @@ INSTALL_DIR="/etc/flux_agent"
 COUNTRY=$(curl -s https://ipinfo.io/country)
 if [ "$COUNTRY" = "CN" ]; then
     # 拼接 URL
-    DOWNLOAD_URL="https://ghfast.top/${DOWNLOAD_URL}"
+    DOWNLOAD_URL="https://github.xloard.com/${DOWNLOAD_URL}"
 fi
 
 
