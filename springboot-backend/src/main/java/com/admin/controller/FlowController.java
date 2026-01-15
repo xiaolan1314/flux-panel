@@ -7,11 +7,13 @@ import com.admin.common.task.CheckGostConfigAsync;
 import com.admin.common.utils.AESCrypto;
 import com.admin.common.utils.GostUtil;
 import com.admin.entity.*;
+import com.admin.service.ChainTunnelService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,6 +65,10 @@ public class FlowController extends BaseController {
 
     @Resource
     CheckGostConfigAsync checkGostConfigAsync;
+
+    @Resource
+    @Lazy
+    ChainTunnelService chainTunnelService;
 
     /**
      * 加密消息包装器
@@ -306,17 +312,14 @@ public class FlowController extends BaseController {
     }
 
     public void pauseService(List<Forward> forwardList, String name) {
-//        for (Forward forward : forwardList) {
-//            Tunnel tunnel = tunnelService.getById(forward.getTunnelId());
-//            if (tunnel != null) {
-//                GostUtil.PauseService(tunnel.getInNodeId(), name);
-//                if (tunnel.getType() == 2) {
-//                    GostUtil.PauseRemoteService(tunnel.getOutNodeId(), name);
-//                }
-//            }
-//            forward.setStatus(0);
-//            forwardService.updateById(forward);
-//        }
+        for (Forward forward : forwardList) {
+            List<ChainTunnel> chainTunnels = chainTunnelService.list(new QueryWrapper<ChainTunnel>().eq("tunnel_id", forward.getTunnelId()).eq("chain_type", 1));
+            for (ChainTunnel chainTunnel : chainTunnels) {
+                GostUtil.PauseAndResumeService(chainTunnel.getNodeId(), name, "PauseService");
+            }
+            forward.setStatus(0);
+            forwardService.updateById(forward);
+        }
     }
 
     private void updateForwardFlow(String forwardId, FlowDto flowStats) {
