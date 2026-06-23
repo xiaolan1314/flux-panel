@@ -19,14 +19,14 @@ get_architecture() {
 # 构建下载地址
 build_download_url() {
     local ARCH=$(get_architecture)
-    echo "https://github.com/bqlpfy/flux-panel/releases/download/2.0.7-beta/gost-${ARCH}"
+    echo "https://github.com/xiaolan1314/flux-panel/releases/download/2.0.7-beta/gost-${ARCH}"
 }
 
 # 下载地址
 DOWNLOAD_URL=$(build_download_url)
 INSTALL_DIR="/etc/flux_agent"
 COUNTRY="CN"
-DOWNLOAD_URL="https://github.xloard.com/${DOWNLOAD_URL}"
+DOWNLOAD_URL="https://gh-proxy.com/${DOWNLOAD_URL}"
 
 
 
